@@ -28,9 +28,11 @@ for (int i = 0; i < numRows; i++) {
 
 for (int i = 0; i < array.length; i++) {
   for (int j = 0; j < array[i].length; j++) {
-    print(array[i][j]);
     if(j%numRows ==0){
-      println();
+      println(array[i][j]);
+    }
+    else{
+     print(array[i][j]);
     }
   }
 }
