@@ -42,7 +42,7 @@ class Car {
   PVector dpos;
   PVector vel;
   float acc;
-  float maxSpeed;
+  float max;
   float ang;
   float spe;
   Car(int x, int y, int dx, int dy, float speed, float angle, float speedLimit){
@@ -52,12 +52,12 @@ class Car {
     spe = speed;
     ang = radians(angle);
     acc =  0;
-    maxSpeed = speedLimit;
+    max = speedLimit;
   }
   
   void update(){
     spe = max(0, spe + acc);
-    spe = min(maxSpeed, spe);
+    spe = min(max, spe);
     vel = PVector.fromAngle(ang).mult(spe);
     pos.add(vel);
   }
