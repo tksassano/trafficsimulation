@@ -57,8 +57,8 @@ class Car {
   
   void update(){
     spe = max(0, spe + acc);
+    spe = min(maxSpeed, spe);
     vel = PVector.fromAngle(ang).mult(spe);
-    vel.limit(maxSpeed);
     pos.add(vel);
   }
   
