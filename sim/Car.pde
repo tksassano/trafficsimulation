@@ -80,7 +80,7 @@ class Car {
     println("-------");
     println("position: " + pos.x + ", " + pos.y);
     println("speed: " + spe);
-    println("angle: " + round(degrees(ang)));
+    println("angle: " + round(degrees(ang) % 360));
     println("acceleration: " + acc);
   }
 }
