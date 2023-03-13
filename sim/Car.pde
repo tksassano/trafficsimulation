@@ -5,7 +5,7 @@ void setup() {
   size(800, 800);
   background(0);
   shapeMode(CENTER);
-  car = new Car(width/2, height - 100, 20, 20, 0, 1.5, 0.01, 270);
+  car = new Car(width/2, height - 100, 30, 20, 0, 1.5, 0.01, 270);
 }
 
 void draw() {
@@ -67,15 +67,13 @@ class Car {
   }
 
   void updateAcceleration(float amt) {
-    if (abs(amt) > maxAcceleration){
-      if (amt > 0){
+    if (abs(amt) > maxAcceleration) {
+      if (amt > 0) {
         acceleration = maxAcceleration;
-      }
-      else {
+      } else {
         acceleration = -maxAcceleration;
       }
-    }
-    else {
+    } else {
       acceleration = amt;
     }
   }
@@ -86,8 +84,12 @@ class Car {
   }
 
   void display() {
+    pushMatrix();
+    translate(position.x, position.y);
+    rotate(radians(angle));
     fill(255);
-    rect(position.x, position.y, w, h);
+    rect(0, 0, w, h);
+    popMatrix();
   }
 
   void printInfo() {
