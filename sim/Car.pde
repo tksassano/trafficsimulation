@@ -23,10 +23,6 @@
  car.updateAcc(0.01);
  }
  
- if (key == 'a'){
- car.updateAcc(0.01);
- }
- 
  if (key == 's'){
  car.updateAcc(0);
  }
