@@ -4,7 +4,7 @@ Car car;
 void setup() {
   size(800, 800);
   background(0);
-  shapeMode(CENTER);
+  imageMode(CENTER);
   car = new Car(width/2, height - 100, 30, 20, 0, 1.5, 0.01, 270);
 }
 
@@ -46,8 +46,10 @@ class Car {
   float acceleration;
   float maxAcceleration;
   float angle;
+  PImage car;
 
   Car(int x, int y, int w_, int h_, float speed_, float maxSpeed_, float maxAcceleration_, float angle_) {
+    car = loadImage("test1.png");
     w = w_;
     h = h_;
     position = new PVector(x, y);
@@ -86,9 +88,9 @@ class Car {
   void display() {
     pushMatrix();
     translate(position.x, position.y);
-    rotate(radians(angle));
+    rotate(radians(angle+90));
     fill(255);
-    rect(0, 0, w, h);
+    image(car, 0, 0, 40, 70);
     popMatrix();
   }
 
