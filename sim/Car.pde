@@ -5,7 +5,7 @@ void setup() {
   size(800, 800);
   background(0);
   shapeMode(CENTER);
-  car = new Car(width/2, height - 100, 20, 20, 0.5, 1.5, 0.01, 270);
+  car = new Car(width/2, height - 100, 20, 20, 0, 1.5, 0.01, 270);
 }
 
 void draw() {
