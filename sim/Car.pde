@@ -63,7 +63,9 @@ class Car {
 
   void update() {
     speed = max(0, speed + acceleration);
-    speed = min(maxSpeed, speed);
+    if (speed >= maxSpeed){
+      acceleration = 0;
+    }
     velocity = PVector.fromAngle(radians(angle)).mult(speed);
     position.add(velocity);
   }
