@@ -48,14 +48,14 @@ class Car {
   float angle;
   PImage car;
 
-  Car(int x, int y, int w_, int h_, float speed_, float maxSpeed_, float maxAcceleration_, float angle_) {
+  Car(int x, int y, int w_, int h_, float speed_, float maxSpeed_, float acceleration_, float maxAcceleration_, float angle_) {
     car = loadImage("test1.png");
     w = w_;
     h = h_;
     position = new PVector(x, y);
     velocity = PVector.fromAngle(radians(angle_)).mult(speed);
     angle = angle_;
-    acceleration =  0;
+    acceleration = acceleration_;
     maxAcceleration = maxAcceleration_;
     speed = speed_;
     maxSpeed = maxSpeed_;
