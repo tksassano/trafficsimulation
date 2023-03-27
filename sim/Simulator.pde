@@ -6,11 +6,10 @@ class Simulator {
   float maxSpeed;
   float maxAcceleration;
   
-  Simulator(int inflow_, float timelapse_, float maxSpeed_, float maxAcceleration_){
+  Simulator(int vph, float timelapse_, float maxSpeed_, float maxAcceleration_){
     carArray = new Car[1000];
     carIndex = 0;
-    inflow = round(1. / hoursToFrames(inflow_));
-    println(inflow);
+    inflow = round(1/(float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse_));
     timelapse = timelapse_;
     maxSpeed = maxSpeed_;
     maxAcceleration = maxAcceleration_;
@@ -23,7 +22,7 @@ class Simulator {
   }
   
   void createCar(){
-    carArray[carIndex] = new Car(width/2, height+40, 30, 20, 1, 1.5, 0.01, 0.02, 270);
+    carArray[carIndex] = new Car(400, 825, 40, 70, 60, 5, 0, 1, 270);
     carIndex ++;
   }
   
