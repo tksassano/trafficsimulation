@@ -16,7 +16,7 @@ class Car {
     h = h_;
     position = new PVector(x, y);
     speed = (mph * 800) / (60 * fps);
-    maxSpeed = (maxmph * 800) / (60 * fps);
+    maxSpeed = (maxmph * 1600) / (60 * fps);
     println(speed);
     velocity = PVector.fromAngle(radians(angle_)).mult(speed);
     angle = angle_;
@@ -56,7 +56,7 @@ class Car {
     translate(position.x, position.y);
     rotate(radians(angle+90));
     fill(255);
-    image(car, 0, 0, 40, 70);
+    image(car, 0, 0, 20, 35);
     popMatrix();
   }
 
