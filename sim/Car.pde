@@ -10,22 +10,22 @@ class Car {
   float angle;
   PImage car;
 
-  Car(int x, int y, int w_, int h_, float mph, float maxmph, float acceleration_, float maxAcceleration_, float angle_) {
+  Car(int x, int y, int w_, int h_, float mph, float maxmph, float mphs, float maxmphs, float angle_) {
     car = loadImage("test1.png");
     w = w_;
     h = h_;
     position = new PVector(x, y);
-    speed = (mph * 800) / (60 * fps);
-    maxSpeed = (maxmph * 1600) / (60 * fps);
-    println(speed);
+    speed = mphToPpf(mph);
+    maxSpeed = mphToPpf(maxmph);
     velocity = PVector.fromAngle(radians(angle_)).mult(speed);
     angle = angle_;
-    acceleration = acceleration_;
-    maxAcceleration = maxAcceleration_;
+    acceleration = mphPerSecToPpfPerFrame(mphs);
+    maxAcceleration = mphPerSecToPpfPerFrame(maxmphs);
   }
 
   void update() {
     speed = max(0, speed + acceleration);
+    println(ppfToMph(speed), ppfToMph(maxSpeed));
     if (speed >= maxSpeed){
       acceleration = 0;
       speed = maxSpeed;
@@ -52,12 +52,13 @@ class Car {
   }
 
   void display() {
-    pushMatrix();
-    translate(position.x, position.y);
-    rotate(radians(angle+90));
+    //pushMatrix();
+    //translate(position.x, position.y);
+    //rotate(radians(angle+90));
+    //image(car, 0, 0, 20, 35);
+    //popMatrix();
     fill(255);
-    image(car, 0, 0, 20, 35);
-    popMatrix();
+    rect(position.x, position.y, 20, 35);
   }
 
   void printInfo() {
