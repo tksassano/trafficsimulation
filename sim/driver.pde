@@ -8,7 +8,7 @@ float timelapse = 1;
 int fps = 60;
 
 void setup() {
-  frameRate = fps;
+  frameRate(fps);
   size(1000, 900);
   background(0);
   imageMode(CENTER);
