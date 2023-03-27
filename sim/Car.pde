@@ -25,7 +25,6 @@ class Car {
 
   void update() {
     speed = max(0, speed + acceleration);
-    println(ppfToMph(speed), ppfToMph(maxSpeed));
     if (speed >= maxSpeed){
       acceleration = 0;
       speed = maxSpeed;
@@ -58,14 +57,14 @@ class Car {
     //image(car, 0, 0, 20, 35);
     //popMatrix();
     fill(255);
-    rect(position.x, position.y, 20, 35);
+    rect(position.x, position.y, feetToPixels(10), feetToPixels(15));
   }
 
   void printInfo() {
     println("-------");
     println("position: " + position.x + ", " + position.y);
-    println("speed: " + speed);
+    println("speed: " + ppfToMph(speed));
+    println("acceleration: " + ppfPerFrameToMphPerSec(acceleration));
     println("angle: " + round(angle % 360));
-    println("acceleration: " + acceleration);
   }
 }
