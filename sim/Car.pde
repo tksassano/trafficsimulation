@@ -1,40 +1,25 @@
-/*Testing Code
-Car car;
+/*
+Simulator sim;
 
 void setup() {
+  frameRate = 60;
   size(800, 800);
   background(0);
   imageMode(CENTER);
-  car = new Car(width/2, height - 100, 30, 20, 0, 1.5, 0.01; 0.01, 270);
+  sim = new Simulator(3600, 1., 1.5, 0.02);
 }
 
 void draw() {
   background(0);
-  car.display();
-  car.update();
-  car.printInfo();
+  sim.display();
+  sim.inflow();
+  sim.update();
 }
 
-void keyPressed() {
-  if (key == 'a') {
-    car.updateAcceleration(0.01);
-  }
-
-  if (key == 's') {
-    car.updateAcceleration(0);
-  }
-
-  if (key == 'd') {
-    car.updateAcceleration(-0.01);
-  }
-  
-  if (keyCode == RIGHT){
-    car.turn(3);
-  }
-  if (keyCode == LEFT){
-    car.turn(-3);
-  }
-}*/
+float hoursToFrames(int hours){
+  return float(hours) / 60 / 60 / frameRate;
+}
+*/
 
 class Car {
   int w;
@@ -65,6 +50,7 @@ class Car {
     speed = max(0, speed + acceleration);
     if (speed >= maxSpeed){
       acceleration = 0;
+      speed = maxSpeed;
     }
     velocity = PVector.fromAngle(radians(angle)).mult(speed);
     position.add(velocity);
