@@ -1,7 +1,7 @@
 //1m = 4000p
 //1h = fps * 3600s
 //1mph = (800p / (fps * 3600s)) ppf
-int PIXELS_PER_MILE = 4000;
+int PIXELS_PER_MILE = 8000;
 
 Simulator sim;
 float timelapse = 1;
@@ -9,7 +9,7 @@ int fps = 60;
 
 void setup() {
   frameRate = fps;
-  size(800, 800);
+  size(1000, 900);
   background(0);
   imageMode(CENTER);
   sim = new Simulator(3600, timelapse, 1.5, 0.02);
@@ -20,6 +20,7 @@ void draw() {
   sim.display();
   sim.inflow();
   sim.update();
+  sim.printInfo();
 }
 
 float mphToPpf(float speedInMph) {
@@ -44,4 +45,10 @@ float ppfPerFrameToMphPerSec(float accelerationInPpfPerFrame) {
   float conversionFactor = (fps  * fps * 60.0 * 60.0) / PIXELS_PER_MILE;
   float accelerationInMphPerSec = accelerationInPpfPerFrame * conversionFactor / timelapse;
   return accelerationInMphPerSec;
+}
+
+float feetToPixels(float distanceInFeet) {
+  float distanceInMiles = distanceInFeet / 5280.0;
+  float distanceInPixels = distanceInMiles * PIXELS_PER_MILE;
+  return distanceInPixels;
 }
