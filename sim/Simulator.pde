@@ -22,7 +22,7 @@ class Simulator {
   }
   
   void createCar(){
-    carArray[carIndex] = new Car(width/2, height+25, 40, 70, 30, 60, 4, 6, 270);
+    carArray[carIndex] = new Car(width/2, height, 20, 35, 0, 5, -90, 1000);
     carIndex ++;
   }
   
