@@ -19,8 +19,9 @@ void draw() {
   background(0);
   sim.display();
   sim.inflow();
-  sim.update();
+  sim.behavior();
   sim.printInfo();
+  sim.move();
 }
 
 float mphToPpf(float speedInMph) {
