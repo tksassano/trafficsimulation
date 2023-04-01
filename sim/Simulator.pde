@@ -22,7 +22,7 @@ class Simulator {
   }
   
   void createCar(){
-    carArray[carIndex] = new Car(width/2, height, 20, 35, 0, 5, -90, 1000);
+    carArray[carIndex] = new Car(width/2, height, 40, 70, 30, 60, 270, 1000);
     carIndex ++;
   }
   
@@ -32,10 +32,18 @@ class Simulator {
     }
   }
   
-  void update(){
+  void move(){
     for (int i = 0; i < carIndex; i++){
-      carArray[i].update();
+      carArray[i].move();
     }    
+  }
+  
+  void behavior(){
+    for (int i = 0; i < carIndex; i++){
+      if (carArray[i].speed < carArray[i].maxSpeed){
+        carArray[i].applyForce(12);
+      }
+    }
   }
   
   void printInfo(){
