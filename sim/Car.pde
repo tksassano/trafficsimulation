@@ -6,10 +6,11 @@ class Car {
   float speed;
   float maxSpeed;
   float angle;
-  float mass;
   float acceleration; 
+  float maxAcceleration;
+  float accelerationTracker;
 
-  Car(int x, int y, int w_, int h_, float mph, float maxmph, float angle_, float mass_) {
+  Car(int x, int y, int w_, int h_, float mph, float maxmph, float maxAcceleration_, float angle_) {
     w = w_;
     h = h_;
     position = new PVector(x, y);
@@ -17,8 +18,8 @@ class Car {
     maxSpeed = mphToPpf(maxmph);
     velocity = PVector.fromAngle(radians(angle_)).mult(speed);
     angle = angle_;
-    mass = mass_;
     acceleration = 0; 
+    maxAcceleration = mphPerSecToPpfPerFrame(maxAcceleration_);
   }
 
   void move() {
@@ -26,11 +27,12 @@ class Car {
     checks();
     velocity = PVector.fromAngle(radians(angle)).mult(speed);
     position.add(velocity);
+    accelerationTracker = acceleration;
     acceleration = 0; 
   }
 
   void applyForce(float force) { 
-    acceleration += force / mass; 
+    acceleration += force;
   }
 
   void turn(float deg) {
@@ -48,9 +50,12 @@ class Car {
 
   void display() {
     rect(position.x, position.y, feetToPixels(10), feetToPixels(15));
+    textSize(25);
+    text("S: " + round(ppfToMph(speed)) + " / " + round(ppfToMph(maxSpeed)), position.x + 20, position.y + 10);
+    text("A: " + ppfPerFrameToMphPerSec(accelerationTracker), position.x + 20, position.y + 30);
   }
 
   void printInfo() {
-    println(position.x + "," + position.y + "," + round(angle % 360) + "," + ppfToMph(speed) + "," + acceleration);
+    println(position.x + "," + position.y + "," + round(angle % 360) + "," + ppfToMph(speed) + "," + ppfPerFrameToMphPerSec(accelerationTracker));
   }
 }
