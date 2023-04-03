@@ -12,7 +12,7 @@ void setup() {
   size(1000, 900);
   background(0);
   imageMode(CENTER);
-  sim = new Simulator(3600, timelapse, 1.5, 0.02);
+  sim = new Simulator(1800, timelapse, fps);
 }
 
 void draw() {
@@ -20,8 +20,8 @@ void draw() {
   sim.display();
   sim.inflow();
   sim.behavior();
-  sim.printInfo();
   sim.move();
+  sim.printInfo(1);
 }
 
 float mphToPpf(float speedInMph) {
