@@ -20,8 +20,8 @@ class Simulator {
   }
 
   void createCar() {
-    int randomSpeed = int(random(30, 45));
-    carArray[carIndex] = new Car(width/2, height, 40, 70, randomSpeed, randomSpeed * 1.25, 10, 270);
+    int randomSpeed = int(random(45, 60));
+    carArray[carIndex] = new Car(width/2, height, 10, 15, randomSpeed, randomSpeed * 1.5, 10, 270);
     carIndex ++;
   }
 
@@ -64,7 +64,7 @@ class Simulator {
   }
 
   float calculateSafeDistance(Car currentCar, Car frontCar) {
-    return 300.;
+    return 200.;
   }
 
   void printInfo(int observing) {
