@@ -12,7 +12,7 @@ void setup() {
   size(1000, 900);
   background(0);
   imageMode(CENTER);
-  sim = new Simulator(1800, timelapse, fps);
+  sim = new Simulator(3600, timelapse, fps);
 }
 
 void draw() {
@@ -21,7 +21,7 @@ void draw() {
   sim.inflow();
   sim.behavior();
   sim.move();
-  sim.printInfo(1);
+  //sim.printInfo(1);
 }
 
 float mphToPpf(float speedInMph) {
@@ -48,8 +48,19 @@ float ppfPerFrameToMphPerSec(float accelerationInPpfPerFrame) {
   return accelerationInMphPerSec;
 }
 
-float feetToPixels(float distanceInFeet) {
+int feetToPixels(float distanceInFeet) {
   float distanceInMiles = distanceInFeet / 5280.0;
-  float distanceInPixels = distanceInMiles * PIXELS_PER_MILE;
+  int distanceInPixels = int(distanceInMiles * PIXELS_PER_MILE);
   return distanceInPixels;
+}
+
+float pixelsToFeet(int distanceInPixels) {
+  float distanceInMiles = distanceInPixels / PIXELS_PER_MILE;
+  float distanceInFeet = distanceInMiles * 5280.0;
+  return distanceInFeet;
+}
+
+float roundToNearestDecimal(float num, int decimalPlace) {
+  float multiplier = pow(10, decimalPlace);
+  return round(num * multiplier) / multiplier;
 }
