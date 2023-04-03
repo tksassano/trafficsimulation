@@ -11,8 +11,8 @@ class Car {
   float accelerationTracker;
 
   Car(int x, int y, int w_, int h_, float mph, float maxmph, float maxAcceleration_, float angle_) {
-    w = w_;
-    h = h_;
+    w = feetToPixels(w_);
+    h = feetToPixels(h_);
     position = new PVector(x, y);
     speed = mphToPpf(mph);
     maxSpeed = mphToPpf(maxmph);
@@ -49,10 +49,10 @@ class Car {
   }
 
   void display() {
-    rect(position.x, position.y, feetToPixels(10), feetToPixels(15));
+    rect(position.x, position.y, w, h);
     textSize(25);
-    text("S: " + round(ppfToMph(speed)) + " / " + round(ppfToMph(maxSpeed)), position.x + 20, position.y + 10);
-    text("A: " + ppfPerFrameToMphPerSec(accelerationTracker), position.x + 20, position.y + 30);
+    text("S: " + roundToNearestDecimal(ppfToMph(speed), 1) + " / " + roundToNearestDecimal(ppfToMph(maxSpeed),1), position.x + 20, position.y + 10);
+    text("A: " + roundToNearestDecimal(ppfPerFrameToMphPerSec(accelerationTracker), 1) + " / " + roundToNearestDecimal(ppfPerFrameToMphPerSec(maxAcceleration), 1), position.x + 20, position.y + 30);
   }
 
   void printInfo() {
