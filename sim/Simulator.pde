@@ -1,12 +1,12 @@
 class Simulator {
-  Car[] carArray;
+  ArrayList<Car> carArray;
   int carIndex;
   int inflow;
   float timelapse;
   float speedLimit;
 
   Simulator(int vph, float timelapse_, int speedLimit_) {
-    carArray = new Car[1000];
+    carArray = new ArrayList<>();
     carIndex = 0;
     inflow = round(1/(float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse_));
     timelapse = timelapse_;
@@ -21,27 +21,27 @@ class Simulator {
 
   void createCar() {
     int randomSpeed = int(random(45, 60));
-    carArray[carIndex] = new Car(width/2, height, 10, 15, randomSpeed, randomSpeed * 1.5, 10, 270);
+    carArray.add(carIndex, new Car(width/2, height, 10, 15, randomSpeed, randomSpeed * 1.5, 10, 270));
     carIndex ++;
   }
 
   void display() {
     for (int i = 0; i < carIndex; i++) {
-      carArray[i].display();
+      carArray.get(i).display();
     }
   }
 
   void move() {
     for (int i = 0; i < carIndex; i++) {
-      carArray[i].move();
+      carArray.get(i).move();
     }
   }
 
   void behavior() {
     for (int i = 0; i < carIndex; i++) {
-      Car currentCar = carArray[i];
+      Car currentCar = carArray.get(i);
       if (i > 0) {
-        Car frontCar = carArray[i-1];
+        Car frontCar = carArray.get(i-1);
         float distance = currentCar.position.dist(frontCar.position);
         float safeDistance = calculateSafeDistance(currentCar, frontCar);
         if (distance < safeDistance) {
@@ -69,7 +69,7 @@ class Simulator {
 
   void printInfo(int observing) {
     if (carIndex > observing) {
-      carArray[observing].printInfo();
+      carArray.get(observing).printInfo();
     }
   }
 }
