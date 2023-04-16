@@ -12,16 +12,12 @@ void setup() {
   size(1000, 900);
   background(0);
   imageMode(CENTER);
-  sim = new Simulator(3600, timelapse, fps);
+  sim = new Simulator(4, 3600, timelapse, fps);
 }
 
 void draw() {
   background(0);
-  sim.display();
-  sim.inflow();
-  sim.behavior();
-  sim.move();
-  //sim.printInfo(1);
+  sim.run();
 }
 
 float mphToPpf(float speedInMph) {
