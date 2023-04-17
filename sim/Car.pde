@@ -2,6 +2,7 @@ class Car {
   int w, h;
   PVector position, velocity;
   float speed, maxSpeed, angle, acceleration, maxAcceleration, accelerationTracker;
+  color c;
 
   Car(int x, int y, int w_, int h_, float mph, float maxmph, float maxAcceleration_, float angle_) {
     w = feetToPixels(w_);
@@ -13,6 +14,7 @@ class Car {
     angle = angle_;
     acceleration = 0; 
     maxAcceleration = mphPerSecToPpfPerFrame(maxAcceleration_);
+    c = color(random(255), random(255), random(255));
   }
 
   void move() {
@@ -33,11 +35,9 @@ class Car {
   void turn(float deg) {
     angle += deg;
   }
-  
-  
 
   void display() {
-    fill(255);
+    fill(c);
     rect(position.x, position.y, w, h);
   }
   
