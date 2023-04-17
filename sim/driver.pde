@@ -15,7 +15,7 @@ void setup() {
   size(1000, 900);
   background(0);
   imageMode(CENTER);
-  sim = new Simulator(4, 1800, timelapse, fps);
+  sim = new Simulator(4, 1800, timelapse, 80);
 }
 
 void draw() {
