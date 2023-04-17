@@ -9,7 +9,8 @@ class Lane {
   Lane(int index, int vph, float timelapse_, int speedLimit_) {
     carArray = new ArrayList<>();
     carIndex = 0;
-    inflow = round(1/(float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse_));
+    inflow = round(1./(float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse_));
+    println(inflow);
     timelapse = timelapse_;
     speedLimit = speedLimit_;
     x = width / 2 + (index - 2) * 100;
@@ -50,19 +51,15 @@ class Lane {
 
         if (distance < safeDistance && currentCar.speed > frontCar.speed) {
 
-          float dist_car_desire = 30;
-          float dist_car = distance;
           float P = 0.1;
 
-          float distance_control = min(-P*(dist_car_desire - dist_car), currentCar.maxAcceleration);
+          float distance_control = min(-P*(safeDistance - distance), currentCar.maxAcceleration);
           currentCar.applyForce(distance_control);
           
         } else if (distance > safeDistance) {
           float force = currentCar.maxAcceleration;
 
           if (currentCar.speed > frontCar.speed + frontCar.maxAcceleration * 5) {
-            println(currentCar.speed);
-            println(frontCar.speed + frontCar.maxAcceleration);
             force *= -1;
           }
           currentCar.applyForce(force);
