@@ -3,6 +3,9 @@
 //1mph = (800p / (fps * 3600s)) ppf
 int PIXELS_PER_MILE = 8000;
 
+float dispRadius = 100;
+boolean mouseHeld = false;
+
 Simulator sim;
 float timelapse = 1;
 int fps = 60;
@@ -12,13 +15,41 @@ void setup() {
   size(1000, 900);
   background(0);
   imageMode(CENTER);
-  sim = new Simulator(4, 3600, timelapse, fps);
+  sim = new Simulator(4, 1800, timelapse, fps);
 }
 
 void draw() {
-  background(0);
+  background(255);
   sim.run();
+  fill(255,0,0,10);
+  circle(mouseX,mouseY, dispRadius);
+  
 }
+
+void mousePressed() {
+  mouseHeld = true;
+}
+
+void mouseReleased(){
+  mouseHeld = false;
+}
+
+
+ArrayList<Car> CarsNearMouse(float radius){
+ ArrayList<Car> CarList = new ArrayList<Car>();
+ for(int i = 0; i < sim.lanes.size(); i++){
+    ArrayList<Car> cArr = sim.lanes.get(i).carArray;
+    for(int u = 0; u < cArr.size(); u++){
+      if (cArr.get(u).position.dist(new PVector(mouseX,mouseY)) < radius) {
+        CarList.add(cArr.get(u));
+      }
+    }
+ }
+ return CarList;
+}
+
+
+
 
 float mphToPpf(float speedInMph) {
   float conversionFactor = PIXELS_PER_MILE / (fps * 60.0 * 60.0);

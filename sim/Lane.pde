@@ -22,12 +22,13 @@ class Lane {
   }
 
   void createCar() {
-    int randomSpeed = int(random(45, 60));
-    carArray.add(carIndex, new Car(x, height, 10, 15, randomSpeed, randomSpeed * 1.5, 10, 270));
+    carArray.add(carIndex, new Car(x, height, 10, 15, random(speedLimit * 0.5,speedLimit), speedLimit, 30, 270));
     carIndex ++;
   }
 
   void display() {
+    fill(255);
+    rect(x - 17.5,0,50,height);
     for (int i = 0; i < carIndex; i++) {
       carArray.get(i).display();
     }
@@ -46,15 +47,30 @@ class Lane {
         Car frontCar = carArray.get(i-1);
         float distance = currentCar.position.dist(frontCar.position);
         float safeDistance = calculateSafeDistance(currentCar, frontCar);
-        if (distance < safeDistance) {
-          float force = map(distance, 0, safeDistance, -currentCar.maxAcceleration, currentCar.maxAcceleration);
+       // println(distance);
+        if (distance < safeDistance && currentCar.speed > frontCar.speed) {
+          /*float force = map(distance, 0, safeDistance, -currentCar.maxAcceleration, currentCar.maxAcceleration);
           if (force > 0 && currentCar.speed >= currentCar.maxSpeed) {
             force = 0;
+          }*/
+          float force = -currentCar.maxAcceleration;
+          currentCar.applyForce(force);
+          
+          /*float force = map(distance, 0, safeDistance, -currentCar.maxAcceleration, currentCar.maxAcceleration);
+          if (force > 0 && currentCar.speed >= currentCar.maxSpeed) {
+            force = 0;
+          }*/
+
+        } else if (distance > safeDistance) {
+          float force = currentCar.maxAcceleration;
+          
+          if(currentCar.speed > frontCar.speed + frontCar.maxAcceleration * 5){
+             println(currentCar.speed);
+             println(frontCar.speed + frontCar.maxAcceleration);
+             force *= -1;
           }
           currentCar.applyForce(force);
-        } else if (currentCar.speed < speedLimit && currentCar.speed < currentCar.maxSpeed) {
-          float force = currentCar.maxAcceleration;
-          currentCar.applyForce(force);
+          
         } else if (currentCar.speed > speedLimit) {
           float force = -currentCar.maxAcceleration;
           currentCar.applyForce(force);
@@ -66,7 +82,7 @@ class Lane {
   }
 
   float calculateSafeDistance(Car currentCar, Car frontCar) {
-    return 200.;
+    return frontCar.w * 1.5 + ppfToMph(frontCar.speed);
   }
 
   void printInfo(int observing) {
