@@ -53,8 +53,8 @@ class Lane {
 
           float P = 0.1;
 
-          float distance_control = min(-P*(safeDistance - distance), currentCar.maxAcceleration);
-          currentCar.applyForce(distance_control);
+          float force = min(-P*(safeDistance - distance), currentCar.maxAcceleration);
+          currentCar.applyForce(force);
           
         } else if (distance > safeDistance) {
           float force = currentCar.maxAcceleration;
