@@ -9,8 +9,7 @@ class Lane {
   Lane(int index, int vph, float timelapse_, int speedLimit_) {
     carArray = new ArrayList<>();
     carIndex = 0;
-    inflow = round(1./(float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse_));
-    println(inflow);
+    inflow = round(1. / (float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse_));
     timelapse = timelapse_;
     speedLimit = mphToPpf(speedLimit_);
     x = width / 2 + (index - 2) * 100;
@@ -23,7 +22,7 @@ class Lane {
   }
 
   void createCar() {
-    carArray.add(carIndex, new Car(x, height, 10, 15, random(ppfToMph(speedLimit) * 0.5, ppfToMph(speedLimit)), ppfToMph(speedLimit), 30, 270));
+    carArray.add(carIndex, new Car(x, height, 10, 15, ppfToMph(speedLimit/2), ppfToMph(speedLimit), 30, 270));
     carIndex ++;
   }
 
@@ -41,7 +40,7 @@ class Lane {
     }
   }
 
-    void behavior() {
+  void behavior() {
     for (int i = 0; i < carIndex; i++) {
       Car currentCar = carArray.get(i);
       if (i > 0) {
@@ -52,7 +51,7 @@ class Lane {
           float P_d = 0.01;
           float A_d = min(-P_d * (safeDistance - distance), currentCar.maxAcceleration);
           float speed_limit = speedLimit;
-          float P_v = 0.1;
+          float P_v = 0.01;
           float A_v = -P_v * (speed_limit - currentCar.speed);
           float A = min(A_d, A_v, currentCar.maxAcceleration);
           currentCar.applyForce(A);
@@ -67,24 +66,25 @@ class Lane {
   }
 
 float calculateSafeDistance(Car currentCar, Car frontCar) {
-  float reactionTime = 2.0; 
-  float currentCarSpeedMph = ppfToMph(currentCar.speed);
-  float frontCarSpeedMph = ppfToMph(frontCar.speed);
-  float speedDifference = currentCarSpeedMph - frontCarSpeedMph;
+    float reactionTime = 1.0;
+    float followingDistance = currentCar.speed * reactionTime; 
+    float bufferDistance = 5.0; 
 
-  float reactionDistance = currentCarSpeedMph * reactionTime * 5280 / 3600;
+    float carLength = currentCar.h;
 
-  float additionalDistance = max(0, speedDifference * reactionTime * 5280 / 3600);
-
-  float safeDistance = frontCar.w * 1.5 + reactionDistance + additionalDistance;
-
-  return safeDistance;
+    if (currentCar.speed > 0 && frontCar.speed > 0) {
+        float decelerationDistance = (currentCar.speed * currentCar.speed) / (2 * currentCar.maxAcceleration) -
+                                      (frontCar.speed * frontCar.speed) / (2 * frontCar.maxAcceleration);
+        return followingDistance + decelerationDistance + bufferDistance + carLength;
+    }
+    else if (currentCar.speed > 0) {
+        float decelerationDistance = (currentCar.speed * currentCar.speed) / (2 * currentCar.maxAcceleration);
+        return followingDistance + decelerationDistance + bufferDistance + carLength;
+    }
+    else {
+        return bufferDistance + carLength;
+    }
 }
 
 
-  void printInfo(int observing) {
-    if (carIndex > observing) {
-      carArray.get(observing).printInfo();
-    }
-  }
 }
