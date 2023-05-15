@@ -38,7 +38,7 @@ class Lane {
       carArray.get(i).display();
     }
     for (MetricTracker metricTracker : metricTrackers) {
-      metricTracker.display(x+35);
+      //metricTracker.display(x+35);
     }
   }
 
