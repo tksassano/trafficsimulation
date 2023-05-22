@@ -1,26 +1,23 @@
 class Simulator {
-  ArrayList<Lane> lanes;
+  ArrayList<Road> roads;
   float prevMillis;
   Simulator(int laneCount, int vph, float timelapse, int speedLimit) {
     prevMillis = millis();
-    lanes = new ArrayList<>();
-    for (int i = 0; i < laneCount; i++) {
-      addLane(new Lane(i, vph * (i+1), timelapse, speedLimit));
-    }
+    roads = new ArrayList<>();
+    roads.add(new Road(200,laneCount,vph,timelapse,speedLimit));
+    
   }
 
-  void addLane(Lane lane) {
-    lanes.add(lane);
+  void addRoad(Road road) {
+    roads.add(road);
   }
 
   void run() {
     float deltaTime = (millis() - prevMillis) / 1000.0;
     prevMillis = millis();
-    for (int i = 0; i < lanes.size(); i++) {
-      lanes.get(i).inflow();
-      lanes.get(i).behavior();
-      lanes.get(i).move(deltaTime);
-      lanes.get(i).display();
+    
+    for(int i = 0; i < roads.size(); i++){
+     roads.get(i).run(); 
     }
     ArrayList<Car> cNear = CarsNearMouse(dispRadius/2.0);
 

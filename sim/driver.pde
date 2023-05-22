@@ -2,7 +2,7 @@
 //1h = fps * 3600s
 //1mph = (800p / (fps * 3600s)) ppf
 int PIXELS_PER_MILE = 8000;
-
+int FRAMES_TO_TRANSITION = 30;
 float dispRadius = 100;
 boolean mouseHeld = false;
 
@@ -15,7 +15,7 @@ void setup() {
   size(1000, 900);
   background(0);
   imageMode(CENTER);
-  sim = new Simulator(4, 1800, timelapse, 80);
+  sim = new Simulator(4, 10000, timelapse, 80);
 }
 
 void draw() {
@@ -37,13 +37,16 @@ void mouseReleased(){
 
 ArrayList<Car> CarsNearMouse(float radius){
  ArrayList<Car> CarList = new ArrayList<Car>();
- for(int i = 0; i < sim.lanes.size(); i++){
-    ArrayList<Car> cArr = sim.lanes.get(i).carArray;
-    for(int u = 0; u < cArr.size(); u++){
-      if (cArr.get(u).position.dist(new PVector(mouseX,mouseY)) < radius) {
-        CarList.add(cArr.get(u));
+ for(int i = 0; i < sim.roads.size(); i++){
+   for(int lane = 0; lane < sim.roads.get(i).lanes.size(); lane++){
+      ArrayList<Car> cArr = sim.roads.get(i).lanes.get(lane).carArray;
+      for(int u = 0; u < cArr.size(); u++){
+        if (cArr.get(u).position.dist(new PVector(mouseX,mouseY)) < radius) {
+          CarList.add(cArr.get(u));
+        }
       }
-    }
+   }
+   
  }
  return CarList;
 }
