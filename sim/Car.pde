@@ -20,7 +20,7 @@ class Car {
     prevPosition = new PVector(x, y);
   }
 
-  
+
 
   void switchLane() {
     if (transitionLane == null) {
@@ -29,15 +29,14 @@ class Car {
     Car frontCarInOriginalLane = getFrontCar(lane);
     Car frontCarInTransitionLane = getFrontCar(transitionLane);
     Car rearCarInTransitionLane = getRearCar(transitionLane);
-
   }
 
- 
+
 
   Car getFrontCar(Lane checkLane) {
     Car frontCar = null;
     float closestDistance = Float.POSITIVE_INFINITY;
-    for (Car car: checkLane.carArray) {
+    for (Car car : checkLane.carArray) {
       if (car != this) {
         float distance = position.y - car.position.y;
         if (distance < closestDistance && distance > 0) {
@@ -56,7 +55,7 @@ class Car {
     Car rearCar = null;
     float closestDistance = Float.POSITIVE_INFINITY;
 
-    for (Car car: checkLane.carArray) {
+    for (Car car : checkLane.carArray) {
       if (car != this) {
         float distance = position.y - car.position.y;
         if (distance < closestDistance && distance < 0) {
@@ -66,7 +65,7 @@ class Car {
       }
     }
 
- 
+
     return rearCar;
   }
   float calculateSafeDistance(Car frontCar) {
@@ -105,41 +104,39 @@ class Car {
       float safeDistance = calculateSafeDistance(frontCar);
 
       if (distance < safeDistance) {
-
-        //TRANSITION STATES
-        /*
+          //TRANSITION STATES
+          /*
         if (transitionLane == null) { //are you not currently transitioning?
-          float diceRoll = random(1);
-          if (diceRoll < 0.5) {
-            if (canSwitchLane(lane.left)) {
-              // perform lane switch behavior
-              switchLane(lane.left);
-            } else if (canSwitchLane(lane.right)) {
-              switchLane(lane.right);
-            }
-          } else {
-            if (canSwitchLane(lane.right)) {
-              // perform lane switch behavior
-              switchLane(lane.right);
-            } else if (canSwitchLane(lane.left)) {
-              switchLane(lane.left);
-            }
-          }
-        }*/
+           float diceRoll = random(1);
+           if (diceRoll < 0.5) {
+           if (canSwitchLane(lane.left)) {
+           // perform lane switch behavior
+           switchLane(lane.left);
+           } else if (canSwitchLane(lane.right)) {
+           switchLane(lane.right);
+           }
+           } else {
+           if (canSwitchLane(lane.right)) {
+           // perform lane switch behavior
+           switchLane(lane.right);
+           } else if (canSwitchLane(lane.left)) {
+           switchLane(lane.left);
+           }
+           }
+           }*/
 
-        //CANNOT SWITCH LANES
-        float P_d = 0.01;
-        float A_d = min(-P_d * (safeDistance - distance), maxAcceleration);
-        float speed_limit = lane.parent.speedLimit;
-        float P_v = 0.01;
-        float A_v = -P_v * (speed_limit - speed);
-        float A = min(A_d, A_v, maxAcceleration);
-        applyForce(A);
+          //CANNOT SWITCH LANES
+          float P_d = 0.01;
+          float A_d = min(-P_d * (safeDistance - distance), maxAcceleration);
+          float speed_limit = lane.parent.speedLimit;
+          float P_v = 0.01;
+          float A_v = -P_v * (speed_limit - speed);
+          float A = min(A_d, A_v, maxAcceleration);
+          applyForce(A);
       } else {
         applyForce(maxAcceleration);
       }
     }
-
   }
   void move() {
     prevPosition = position.copy();
