@@ -20,11 +20,24 @@ class Car {
     prevPosition = new PVector(x, y);
   }
 
+  
+
+  void switchLane() {
+    if (transitionLane == null) {
+      return; // Prerequisite: The target lane must exist
+    }
+    Car frontCarInOriginalLane = getFrontCar(lane);
+    Car frontCarInTransitionLane = getFrontCar(transitionLane);
+    Car rearCarInTransitionLane = getRearCar(transitionLane);
+
+  }
+
+ 
+
   Car getFrontCar(Lane checkLane) {
     Car frontCar = null;
     float closestDistance = Float.POSITIVE_INFINITY;
-
-    for (Car car : checkLane.carArray) {
+    for (Car car: checkLane.carArray) {
       if (car != this) {
         float distance = position.y - car.position.y;
         if (distance < closestDistance && distance > 0) {
@@ -34,96 +47,86 @@ class Car {
       }
     }
 
+
+
     return frontCar;
   }
-  
+
   Car getRearCar(Lane checkLane) {
-    Car frontCar = null;
+    Car rearCar = null;
     float closestDistance = Float.POSITIVE_INFINITY;
 
-    for (Car car : checkLane.carArray) {
+    for (Car car: checkLane.carArray) {
       if (car != this) {
         float distance = position.y - car.position.y;
         if (distance < closestDistance && distance < 0) {
           closestDistance = distance;
-          frontCar = car;
+          rearCar = car;
         }
       }
     }
 
-    return frontCar;
+ 
+    return rearCar;
   }
-  
-  void switchLane(Lane laneToSwitch) {
-    /*PSEUDOCODE:
-    The car will be factored into the FrontCar method for cars on
-    both the lane and the lane to switch as it is switching.
-    While it is switching, itself it will follow the FrontCar of
-    the original lane until halfway through. On the halfway mark, 
-    it will then switch to the FrontCar logic of the second lane
-    and the cars of the original lane will stop keeping the transition
-    car in mind.
-    */
-  }
-  
   float calculateSafeDistance(Car frontCar) {
-  float reactionTime = 1.0;
-  float followingDistance = speed * reactionTime;
-  float bufferDistance = 10.0;
+    float reactionTime = 1.0;
+    float followingDistance = speed * reactionTime;
+    float bufferDistance = 10.0;
 
-  float carLength = h;
+    float carLength = h;
 
-  if (speed > 0 && frontCar.speed > 0) {
-    float decelerationDistance = (speed * speed) / (2 * maxAcceleration) -
-      (frontCar.speed * frontCar.speed) / (2 * frontCar.maxAcceleration);
-    return followingDistance + decelerationDistance + bufferDistance + carLength;
-  } else if (speed > 0 && frontCar.speed == 0) {
-    float decelerationDistance = (speed * speed) / (2 * maxAcceleration);
-    return followingDistance + decelerationDistance + bufferDistance + carLength;
-  } else {
-    return bufferDistance + carLength;
+    if (speed > 0 && frontCar.speed > 0) {
+      float decelerationDistance = (speed * speed) / (2 * maxAcceleration) -
+        (frontCar.speed * frontCar.speed) / (2 * frontCar.maxAcceleration);
+      return followingDistance + decelerationDistance + bufferDistance + carLength;
+    } else if (speed > 0 && frontCar.speed == 0) {
+      float decelerationDistance = (speed * speed) / (2 * maxAcceleration);
+      return followingDistance + decelerationDistance + bufferDistance + carLength;
+    } else {
+      return bufferDistance + carLength;
+    }
   }
-}
-  
+
   boolean canSwitchLane(Lane laneToSwitch) {
     if (laneToSwitch == null) {
       return false; // prerequisite: the target lane must exist
     }
-      
+    /* PSEUDOCODE: Based off the pseudocode in switchLane, write something up here.*/
     return false;
   }
-  
+
   void think() {
     Car frontCar = getFrontCar(lane);
-    if(frontCar == null){
+    if (frontCar == null) {
       applyForce(maxAcceleration);
     } else {
-       float distance = position.dist(frontCar.position);
-       float safeDistance = calculateSafeDistance(frontCar);
+      float distance = position.dist(frontCar.position);
+      float safeDistance = calculateSafeDistance(frontCar);
 
       if (distance < safeDistance) {
-        
+
         //TRANSITION STATES
-        if(transitionLane == null){ //are you not currently transitioning?
-           float diceRoll = random(1);
-            if (diceRoll < 0.5) {
-              if (canSwitchLane(lane.left)) {
-                // perform lane switch behavior
-                switchLane(lane.left);
-              } else if(canSwitchLane(lane.right)) {
-                switchLane(lane.right);
-              }
-            } else {
-              if (canSwitchLane(lane.right)) {
-                // perform lane switch behavior
-                switchLane(lane.right);
-              } else if(canSwitchLane(lane.left)) {
-                switchLane(lane.left);
-              }
+        /*
+        if (transitionLane == null) { //are you not currently transitioning?
+          float diceRoll = random(1);
+          if (diceRoll < 0.5) {
+            if (canSwitchLane(lane.left)) {
+              // perform lane switch behavior
+              switchLane(lane.left);
+            } else if (canSwitchLane(lane.right)) {
+              switchLane(lane.right);
             }
-        }
-       
-  
+          } else {
+            if (canSwitchLane(lane.right)) {
+              // perform lane switch behavior
+              switchLane(lane.right);
+            } else if (canSwitchLane(lane.left)) {
+              switchLane(lane.left);
+            }
+          }
+        }*/
+
         //CANNOT SWITCH LANES
         float P_d = 0.01;
         float A_d = min(-P_d * (safeDistance - distance), maxAcceleration);
@@ -136,7 +139,7 @@ class Car {
         applyForce(maxAcceleration);
       }
     }
-   
+
   }
   void move() {
     prevPosition = position.copy();
