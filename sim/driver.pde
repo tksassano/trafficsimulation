@@ -35,21 +35,22 @@ void mouseReleased(){
 }
 
 
-ArrayList<Car> CarsNearMouse(float radius){
- ArrayList<Car> CarList = new ArrayList<Car>();
- for(int i = 0; i < sim.roads.size(); i++){
-   for(int lane = 0; lane < sim.roads.get(i).lanes.size(); lane++){
-      ArrayList<Car> cArr = sim.roads.get(i).lanes.get(lane).carArray;
-      for(int u = 0; u < cArr.size(); u++){
-        if (cArr.get(u).position.dist(new PVector(mouseX,mouseY)) < radius) {
-          CarList.add(cArr.get(u));
+ArrayList<Car> CarsNearMouse(float radius) {
+    ArrayList<Car> CarList = new ArrayList<Car>();
+
+    for (Road road : sim.roads) {
+        for (Lane lane : road.lanes) {
+            for (Car car : lane.carArray) {
+                if (car.position.dist(new PVector(mouseX, mouseY)) < radius) {
+                    CarList.add(car);
+                }
+            }
         }
-      }
-   }
-   
- }
- return CarList;
+    }
+
+    return CarList;
 }
+
 
 
 
