@@ -5,6 +5,7 @@ class Car {
   color c;
   PVector prevPosition;
   Lane lane, transitionLane;
+  float reactionTimeDelay;
   Car(Lane lane, int x, int y, int w_, int h_, float mph, float maxmph, float maxAcceleration_, float angle_) {
     w = feetToPixels(w_);
     h = feetToPixels(h_);
@@ -18,6 +19,7 @@ class Car {
     maxAcceleration = mphPerSecToPpfPerFrame(maxAcceleration_);
     c = color(random(255), random(255), random(255));
     prevPosition = new PVector(x, y);
+    reactionTimeDelay = 0;
   }
 
 
@@ -102,7 +104,13 @@ class Car {
     } else {
       float distance = position.dist(frontCar.position);
       float safeDistance = calculateSafeDistance(frontCar);
-
+      if (int(distance) == int(safeDistance)){
+        reactionTimeDelay = 1.0;
+      }
+      else {
+        reactionTimeDelay -= 0.01;
+        reactionTimeDelay = max(0, reactionTimeDelay);
+      }
       if (distance < safeDistance) {
           //TRANSITION STATES
           /*
@@ -132,12 +140,15 @@ class Car {
           float P_v = 0.01;
           float A_v = -P_v * (speed_limit - speed);
           float A = min(A_d, A_v, maxAcceleration);
+          if (reactionTimeDelay < 0.00001){
           applyForce(A);
+          }
       } else {
         applyForce(maxAcceleration);
       }
     }
   }
+  
   void move() {
     prevPosition = position.copy();
     if (mouseHeld && position.dist(new PVector(mouseX, mouseY)) < dispRadius) {
