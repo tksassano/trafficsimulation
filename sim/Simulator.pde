@@ -16,13 +16,13 @@ class Simulator {
     float deltaTime = (millis() - prevMillis) / 1000.0;
     prevMillis = millis();
     
-    for(int i = 0; i < roads.size(); i++){
-     roads.get(i).run(); 
+    for(Road road: roads){
+     road.run(); 
     }
     ArrayList<Car> cNear = CarsNearMouse(dispRadius/2.0);
 
-    for (int u = 0; u < cNear.size(); u++) {
-      cNear.get(u).displayInfo();
+    for (Car car: cNear) {
+      car.displayInfo();
     }
   }
 }
