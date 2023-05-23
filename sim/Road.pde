@@ -32,9 +32,9 @@ class Road {
  
  void run(){
    inflow();
-   for (int i = 0; i < lanes.size(); i++) {
-     lanes.get(i).behavior();
-     lanes.get(i).display();
+   for (Lane lane: lanes) {
+     lane.behavior();
+     lane.display();
    }
  }
   
