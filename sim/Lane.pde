@@ -26,11 +26,10 @@ class Lane {
   }
 
   void display() {
-    println("hi!");
     fill(255);
     rect(x - 17.5, 0, 50, height);
-    for (int i = 0; i < carArray.size(); i++) {
-      carArray.get(i).display();
+    for (Car car: carArray) {
+      car.display();
     }
     /*
     for (MetricTracker metricTracker : metricTrackers) {
@@ -41,10 +40,9 @@ class Lane {
  
 
   void behavior() {
-    for (int i = 0; i < carIndex; i++) {
-      Car currentCar = carArray.get(i);
-        currentCar.think();
-        currentCar.move();
+    for (Car car: carArray) {
+        car.think();
+        car.move();
     }
   }
   
