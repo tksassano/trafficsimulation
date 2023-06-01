@@ -1,51 +1,62 @@
 class MetricTracker {
-  int yPosition;
-  int vehiclesPassed;
-  float totalTime;
-  float totalDistance;
+  int totalCars;
   float totalSpeed;
+  int interval;
+  int intervalCount;
+  int densityInterval;
+  int segmentLength;
+  ArrayList<Car> carsInSegment;
 
-  MetricTracker(int yPosition) {
-    this.yPosition = yPosition;
-    vehiclesPassed = 0;
-    totalTime = 0;
-    totalDistance = 0;
-    totalSpeed = 0;
+  MetricTracker(int interval, int densityInterval, int segmentLength) {
+    this.interval = interval;
+    this.densityInterval = densityInterval;
+    this.segmentLength = segmentLength;
+    this.carsInSegment = new ArrayList<>();
+    reset();
   }
 
-  void update(Car car, float deltaTime) {
-    if (frameCount % (fps * 5) == 0){
-      vehiclesPassed = 0;
-      totalTime = 0;
-      totalDistance = 0;
-      totalSpeed = 0;
+  void reset() {
+    totalCars = 0;
+    totalSpeed = 0;
+    intervalCount = 0;
+    carsInSegment.clear();
+  }
+
+  void addCar(Car car) {
+    totalCars++;
+    totalSpeed += car.speed;
+    if (car.position.y <= segmentLength) {
+      carsInSegment.add(car);
     }
-    if (int(car.position.y) - int(yPosition) < car.speed) {
-      vehiclesPassed++;
-      totalTime += deltaTime;
-      totalDistance += car.position.dist(car.prevPosition);
-      totalSpeed += car.speed;
-    }
+  }
+
+  void removeCar(Car car) {
+    carsInSegment.remove(car);
   }
 
   float getThroughput() {
-    return vehiclesPassed / totalTime;
+    return (float) totalCars / interval;
   }
 
   float getAverageSpeed() {
-    return totalSpeed / vehiclesPassed;
+    if (totalCars == 0) return 0;
+    return totalSpeed / totalCars;
   }
 
   float getDensity() {
-    return vehiclesPassed / totalDistance;
+    return (float) carsInSegment.size() / segmentLength;
   }
 
-  void display(int x) {
-    textSize(15);
-    fill(0);
-    textAlign(LEFT);
-    text("T: " + roundToNearestDecimal(getThroughput(), 1), x, yPosition + 10);
-    text("S: " + roundToNearestDecimal(getAverageSpeed(), 1), x, yPosition + 30);
-    text("D: " + roundToNearestDecimal(getDensity(), 1), x, yPosition + 50);
+  void update() {
+    intervalCount++;
+    if (intervalCount >= interval) {
+      println("Throughput: " + getThroughput());
+      println("Average speed: " + getAverageSpeed());
+      reset();
+    }
+    if (intervalCount % densityInterval == 0) {
+      println("Density: " + getDensity());
+      carsInSegment.clear();
+    }
   }
 }
