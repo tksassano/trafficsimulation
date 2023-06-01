@@ -21,38 +21,34 @@ void setup() {
 void draw() {
   background(255);
   sim.run();
-  fill(255,0,0,10);
-  circle(mouseX,mouseY, dispRadius);
-  
+  fill(255, 0, 0, 10);
+  circle(mouseX, mouseY, dispRadius);
 }
 
 void mousePressed() {
   mouseHeld = true;
 }
 
-void mouseReleased(){
+void mouseReleased() {
   mouseHeld = false;
 }
 
 
 ArrayList<Car> CarsNearMouse(float radius) {
-    ArrayList<Car> CarList = new ArrayList<Car>();
+  ArrayList<Car> CarList = new ArrayList<Car>();
 
-    for (Road road : sim.roads) {
-        for (Lane lane : road.lanes) {
-            for (Car car : lane.carArray) {
-                if (car.position.dist(new PVector(mouseX, mouseY)) < radius) {
-                    CarList.add(car);
-                }
-            }
+  for (Road road : sim.roads) {
+    for (Lane lane : road.lanes) {
+      for (Car car : lane.carArray) {
+        if (car.position.dist(new PVector(mouseX, mouseY)) < radius) {
+          CarList.add(car);
         }
+      }
     }
+  }
 
-    return CarList;
+  return CarList;
 }
-
-
-
 
 
 float mphToPpf(float speedInMph) {
