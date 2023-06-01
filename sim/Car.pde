@@ -4,8 +4,7 @@ class Car {
   float speed, maxSpeed, angle, acceleration, maxAcceleration, accelerationTracker;
   color c;
   PVector prevPosition;
-  Lane lane, transitionLane;
-  float reactionTimeDelay;
+  Lane lane, transitionLane, laneToSwitch;
   Car(Lane lane, int x, int y, int w_, int h_, float mph, float maxmph, float maxAcceleration_, float angle_) {
     w = feetToPixels(w_);
     h = feetToPixels(h_);
@@ -19,21 +18,15 @@ class Car {
     maxAcceleration = mphPerSecToPpfPerFrame(maxAcceleration_);
     c = color(random(255), random(255), random(255));
     prevPosition = new PVector(x, y);
-    reactionTimeDelay = 0;
   }
 
-
-
-  void switchLane() {
-    if (transitionLane == null) {
-      return; // Prerequisite: The target lane must exist
-    }
-    Car frontCarInOriginalLane = getFrontCar(lane);
-    Car frontCarInTransitionLane = getFrontCar(transitionLane);
-    Car rearCarInTransitionLane = getRearCar(transitionLane);
+  void switchLane(Lane newLane) {
+    lane.removeCar(this);
+    position.x = newLane.x;
+    newLane.addCar(this);
+    lane = newLane;
+    laneToSwitch = null;
   }
-
-
 
   Car getFrontCar(Lane checkLane) {
     Car frontCar = null;
@@ -47,8 +40,6 @@ class Car {
         }
       }
     }
-
-
 
     return frontCar;
   }
@@ -93,8 +84,32 @@ class Car {
     if (laneToSwitch == null) {
       return false; // prerequisite: the target lane must exist
     }
-    /* PSEUDOCODE: Based off the pseudocode in switchLane, write something up here.*/
-    return false;
+    Car frontCarInTargetLane = getFrontCar(laneToSwitch);
+    Car rearCarInTargetLane = getRearCar(laneToSwitch);
+
+    // If there are no cars in the target lane, it's safe to switch
+    if (frontCarInTargetLane == null && rearCarInTargetLane == null) {
+      return true;
+    }
+
+    // If there's a car in front, check the safe distance
+    if (frontCarInTargetLane != null) {
+      float frontDistance = position.dist(frontCarInTargetLane.position);
+      if (frontDistance < calculateSafeDistance(frontCarInTargetLane)) {
+        return false;
+      }
+    }
+
+    // If there's a car in the rear, make sure it's far enough away
+    if (rearCarInTargetLane != null) {
+      float rearDistance = position.dist(rearCarInTargetLane.position);
+      if (rearDistance < calculateSafeDistance(rearCarInTargetLane)) {
+        return false;
+      }
+    }
+
+    // If it passed all checks, it's safe to switch
+    return true;
   }
 
   void think() {
@@ -104,51 +119,32 @@ class Car {
     } else {
       float distance = position.dist(frontCar.position);
       float safeDistance = calculateSafeDistance(frontCar);
-      if (int(distance) == int(safeDistance)){
-        reactionTimeDelay = 1.0;
-      }
-      else {
-        reactionTimeDelay -= 0.01;
-        reactionTimeDelay = max(0, reactionTimeDelay);
-      }
       if (distance < safeDistance) {
-          //TRANSITION STATES
-          /*
-        if (transitionLane == null) { //are you not currently transitioning?
-           float diceRoll = random(1);
-           if (diceRoll < 0.5) {
-           if (canSwitchLane(lane.left)) {
-           // perform lane switch behavior
-           switchLane(lane.left);
-           } else if (canSwitchLane(lane.right)) {
-           switchLane(lane.right);
-           }
-           } else {
-           if (canSwitchLane(lane.right)) {
-           // perform lane switch behavior
-           switchLane(lane.right);
-           } else if (canSwitchLane(lane.left)) {
-           switchLane(lane.left);
-           }
-           }
-           }*/
-
-          //CANNOT SWITCH LANES
-          float P_d = 0.01;
-          float A_d = min(-P_d * (safeDistance - distance), maxAcceleration);
-          float speed_limit = lane.parent.speedLimit;
-          float P_v = 0.01;
-          float A_v = -P_v * (speed_limit - speed);
-          float A = min(A_d, A_v, maxAcceleration);
-          if (reactionTimeDelay < 0.00001){
-          applyForce(A);
+        //TRANSITION STATES
+        if (transitionLane == null) {
+          float diceRoll = random(1);
+          if (diceRoll < 0.2) {
+            if (canSwitchLane(lane.left)) {
+              laneToSwitch = lane.left;
+            } else if (canSwitchLane(lane.right)) {
+              laneToSwitch = lane.right;
+            }
           }
+        }
+        //CANNOT SWITCH LANES
+        float P_d = 0.01;
+        float A_d = min(-P_d * (safeDistance - distance), maxAcceleration);
+        float speed_limit = lane.parent.speedLimit;
+        float P_v = 0.01;
+        float A_v = -P_v * (speed_limit - speed);
+        float A = min(A_d, A_v, maxAcceleration);
+        applyForce(A);
       } else {
         applyForce(maxAcceleration);
       }
     }
   }
-  
+
   void move() {
     prevPosition = position.copy();
     if (mouseHeld && position.dist(new PVector(mouseX, mouseY)) < dispRadius) {
@@ -167,6 +163,10 @@ class Car {
 
   void turn(float deg) {
     angle += deg;
+  }
+
+  Lane getLaneToSwitch() {
+    return laneToSwitch;
   }
 
   void display() {
