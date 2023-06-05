@@ -147,7 +147,7 @@ class Car {
   }
   void move() {
     prevPosition = position.copy();
-    if (mouseHeld && position.dist(new PVector(mouseX, mouseY)) < dispRadius) {
+    if (mouseHeld && position.dist(new PVector(mouseX, mouseY)) < dispRadius/2) {
       acceleration = -maxAcceleration;
     }
     speed = constrain(speed + acceleration, 0, maxSpeed);
