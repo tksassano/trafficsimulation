@@ -25,16 +25,17 @@ class Car {
   }
 
   void switchLane(Lane newLane) {
-    if (millis() - lastSwitchTime >= switchCooldown * 1000) {
-      lane.removeCar(this);
-      position.x = newLane.x;
-      newLane.addCar(this);
-      lane = newLane;
-      laneToSwitch = null;
-      lastSwitchTime = millis();
-      maxSpeed = mphToPpf(lane.speedLimit);
-    }
+  if (millis() - lastSwitchTime > switchCooldown * 1000) {
+    lane.removeCar(this);
+    position.x = newLane.x;
+    newLane.addCar(this);
+    lane = newLane;
+    laneToSwitch = null;
+    lastSwitchTime = millis();
+    maxSpeed = mphToPpf(lane.speedLimit);
   }
+}
+
 
   Car getFrontCar(Lane checkLane) {
     Car frontCar = null;
@@ -89,7 +90,7 @@ class Car {
   }
 
   boolean canSwitchLane(Lane laneToSwitch) {
-    float tolerance = 2;
+    float tolerance = 1;
     if (laneToSwitch == null) {
       return false;
     }
@@ -98,14 +99,14 @@ class Car {
 
     if (frontCarInTargetLane != null) {
       float frontDistance = position.dist(frontCarInTargetLane.position);
-      if (frontDistance < calculateSafeDistance(frontCarInTargetLane) || Math.abs(frontCarInTargetLane.speed - this.speed) < tolerance) {
+      if (frontDistance < calculateSafeDistance(frontCarInTargetLane) * 2 || Math.abs(frontCarInTargetLane.speed - this.speed) < tolerance) {
         return false;
       }
     }
 
     if (rearCarInTargetLane != null) {
       float rearDistance = position.dist(rearCarInTargetLane.position);
-      if (rearDistance < calculateSafeDistance(rearCarInTargetLane) || Math.abs(rearCarInTargetLane.speed - this.speed) < tolerance) {
+      if (rearDistance < calculateSafeDistance(rearCarInTargetLane) * 2 || Math.abs(rearCarInTargetLane.speed - this.speed) < tolerance) {
         return false;
       }
     }
@@ -123,14 +124,11 @@ class Car {
       if (distance < safeDistance) {
         //TRANSITION STATES
         if (transitionLane == null) {
-          float diceRoll = random(1);
-          if (diceRoll < 0.2) {
             if (canSwitchLane(lane.left)) {
               laneToSwitch = lane.left;
             } else if (canSwitchLane(lane.right)) {
               laneToSwitch = lane.right;
             }
-          }
         }
         //CANNOT SWITCH LANES
         float P_d = 0.01;
