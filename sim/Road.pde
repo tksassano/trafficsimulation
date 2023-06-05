@@ -6,14 +6,14 @@ class Road {
  float timelapse;
  float speedLimit;
  
- Road(int x, int numLanes,int vph, float timelapse, int speedLimit){
+ Road(int x, int numLanes,int vph, float timelapse){
    carIndex = 0;
    inflow = round(1. / (float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse));
    this.timelapse = timelapse;
    this.speedLimit = mphToPpf(speedLimit);
    Lane lastLane = null;
    for(int i = 0; i < numLanes; i++){
-     Lane newLane = new Lane(this,x+50*i,lastLane,null);
+     Lane newLane = new Lane(this,x+50*i,lastLane,null, 30 / random(1,5));
      if(lastLane != null) lastLane.right = newLane;
      addLane(newLane);
      lastLane = newLane;
