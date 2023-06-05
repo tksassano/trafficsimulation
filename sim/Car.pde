@@ -32,7 +32,7 @@ class Car {
       lane = newLane;
       laneToSwitch = null;
       lastSwitchTime = millis();
-      maxSpeed = lane.speedLimit;
+      maxSpeed = mphToPpf(lane.speedLimit);
     }
   }
 
@@ -98,8 +98,6 @@ class Car {
 
     if (frontCarInTargetLane != null) {
       float frontDistance = position.dist(frontCarInTargetLane.position);
-      println(frontCarInTargetLane.speed);
-      println(this.speed);
       if (frontDistance < calculateSafeDistance(frontCarInTargetLane) || Math.abs(frontCarInTargetLane.speed - this.speed) < tolerance) {
         return false;
       }
