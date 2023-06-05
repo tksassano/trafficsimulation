@@ -2,10 +2,10 @@ class Simulator {
   ArrayList<Road> roads;
   float prevMillis;
 
-  Simulator(int laneCount, int vph, float timelapse, int speedLimit) {
+  Simulator(int laneCount, int vph, float timelapse) {
     prevMillis = millis();
     roads = new ArrayList<>();
-    roads.add(new Road(200, laneCount, vph, timelapse, speedLimit));
+    roads.add(new Road(200, laneCount, vph, timelapse));
   }
 
   void addRoad(Road road) {
