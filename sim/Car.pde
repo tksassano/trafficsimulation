@@ -4,6 +4,8 @@ class Car {
   float speed, maxSpeed, angle, acceleration, maxAcceleration, accelerationTracker;
   color c;
   PVector prevPosition;
+  float lastSwitchTime;
+  float switchCooldown;
   Lane lane, transitionLane, laneToSwitch;
   Car(Lane lane, int x, int y, int w_, int h_, float mph, float maxmph, float maxAcceleration_, float angle_) {
     w = feetToPixels(w_);
@@ -18,14 +20,19 @@ class Car {
     maxAcceleration = mphPerSecToPpfPerFrame(maxAcceleration_);
     c = color(random(255), random(255), random(255));
     prevPosition = new PVector(x, y);
+    lastSwitchTime = 0;
+    switchCooldown = 3.0;
   }
 
   void switchLane(Lane newLane) {
-    lane.removeCar(this);
-    position.x = newLane.x;
-    newLane.addCar(this);
-    lane = newLane;
-    laneToSwitch = null;
+    if (millis() - lastSwitchTime >= switchCooldown * 1000) {
+      lane.removeCar(this);
+      position.x = newLane.x;
+      newLane.addCar(this);
+      lane = newLane;
+      laneToSwitch = null;
+      lastSwitchTime = millis();
+    }
   }
 
   Car getFrontCar(Lane checkLane) {
