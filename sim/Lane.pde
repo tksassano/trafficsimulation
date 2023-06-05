@@ -3,17 +3,19 @@ class Lane {
   int x, carIndex;
   Road parent;
   Lane left, right;
+  float speedLimit;
 
-  Lane(Road parent, int x, Lane left, Lane right) {
+  Lane(Road parent, int x, Lane left, Lane right, float speedLimit) {
     carArray = new ArrayList<>();
     this.x = x;
     this.left = left;
     this.right = right;
     this.parent = parent;
+    this.speedLimit = speedLimit;
   }
 
   void createCar() {
-    Car car = new Car(this, x, height, 10, 15, ppfToMph(parent.speedLimit/2), ppfToMph(parent.speedLimit), 30, 270);
+    Car car = new Car(this, x, height, 10, 15, ppfToMph(speedLimit/2), ppfToMph(speedLimit), 30, 270);
     addCar(car);
     carIndex++;
   }
@@ -40,14 +42,12 @@ class Lane {
     for (Car car : carArray) {
       car.think();
       car.move();
-      // If the car wants to switch lanes, add it to the list
       Lane laneToSwitch = car.getLaneToSwitch();
       if (laneToSwitch != null) {
         carsToSwitchLanes.add(car);
       }
     }
 
-    // Now switch the lanes of all cars that wanted to switch
     for (Car car : carsToSwitchLanes) {
       if (car.canSwitchLane(car.getLaneToSwitch())) {
         car.switchLane(car.getLaneToSwitch());
