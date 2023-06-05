@@ -13,7 +13,7 @@ class Road {
    this.speedLimit = mphToPpf(speedLimit);
    Lane lastLane = null;
    for(int i = 0; i < numLanes; i++){
-     Lane newLane = new Lane(this,x+50*i,lastLane,null, 30 / random(1,5));
+     Lane newLane = new Lane(this,x+50*i,lastLane, null, 30 + 5 * i);
      if(lastLane != null) lastLane.right = newLane;
      addLane(newLane);
      lastLane = newLane;
