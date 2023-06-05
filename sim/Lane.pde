@@ -15,7 +15,7 @@ class Lane {
   }
 
   void createCar() {
-    Car car = new Car(this, x, height, 10, 15, ppfToMph(speedLimit/2), ppfToMph(speedLimit), 30, 270);
+    Car car = new Car(this, x, height, 10, 15, speedLimit/2, speedLimit, 30, 270);
     addCar(car);
     carIndex++;
   }
