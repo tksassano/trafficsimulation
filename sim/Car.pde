@@ -81,26 +81,25 @@ class Car {
   }
 
   boolean canSwitchLane(Lane laneToSwitch) {
+    float tolerance = 2;
     if (laneToSwitch == null) {
       return false;
     }
     Car frontCarInTargetLane = getFrontCar(laneToSwitch);
     Car rearCarInTargetLane = getRearCar(laneToSwitch);
 
-    if (frontCarInTargetLane == null && rearCarInTargetLane == null) {
-      return true;
-    }
-
     if (frontCarInTargetLane != null) {
       float frontDistance = position.dist(frontCarInTargetLane.position);
-      if (frontDistance < calculateSafeDistance(frontCarInTargetLane)) {
+      println(frontCarInTargetLane.speed);
+      println(this.speed);
+      if (frontDistance < calculateSafeDistance(frontCarInTargetLane) || Math.abs(frontCarInTargetLane.speed - this.speed) < tolerance) {
         return false;
       }
     }
 
     if (rearCarInTargetLane != null) {
       float rearDistance = position.dist(rearCarInTargetLane.position);
-      if (rearDistance < calculateSafeDistance(rearCarInTargetLane)) {
+      if (rearDistance < calculateSafeDistance(rearCarInTargetLane) || Math.abs(rearCarInTargetLane.speed - this.speed) < tolerance) {
         return false;
       }
     }
@@ -140,7 +139,6 @@ class Car {
       }
     }
   }
-
   void move() {
     prevPosition = position.copy();
     if (mouseHeld && position.dist(new PVector(mouseX, mouseY)) < dispRadius) {
