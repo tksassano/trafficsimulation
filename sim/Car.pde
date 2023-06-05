@@ -32,6 +32,7 @@ class Car {
       lane = newLane;
       laneToSwitch = null;
       lastSwitchTime = millis();
+      maxSpeed = lane.speedLimit;
     }
   }
 
