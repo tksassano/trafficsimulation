@@ -82,17 +82,15 @@ class Car {
 
   boolean canSwitchLane(Lane laneToSwitch) {
     if (laneToSwitch == null) {
-      return false; // prerequisite: the target lane must exist
+      return false;
     }
     Car frontCarInTargetLane = getFrontCar(laneToSwitch);
     Car rearCarInTargetLane = getRearCar(laneToSwitch);
 
-    // If there are no cars in the target lane, it's safe to switch
     if (frontCarInTargetLane == null && rearCarInTargetLane == null) {
       return true;
     }
 
-    // If there's a car in front, check the safe distance
     if (frontCarInTargetLane != null) {
       float frontDistance = position.dist(frontCarInTargetLane.position);
       if (frontDistance < calculateSafeDistance(frontCarInTargetLane)) {
@@ -100,7 +98,6 @@ class Car {
       }
     }
 
-    // If there's a car in the rear, make sure it's far enough away
     if (rearCarInTargetLane != null) {
       float rearDistance = position.dist(rearCarInTargetLane.position);
       if (rearDistance < calculateSafeDistance(rearCarInTargetLane)) {
@@ -108,7 +105,6 @@ class Car {
       }
     }
 
-    // If it passed all checks, it's safe to switch
     return true;
   }
 
