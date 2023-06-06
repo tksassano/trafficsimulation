@@ -194,7 +194,7 @@ class Car {
   }
 
   void applyForce(float force) {
-    if(abs(force) > abs(acceleration)) acceleration = force;
+    if(abs(force) > abs(acceleration)) acceleration = constrain(force,-maxAcceleration,maxAcceleration);
   }
 
   void turn(float deg) {
