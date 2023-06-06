@@ -1,5 +1,7 @@
 class Road {
  ArrayList<Lane>lanes = new ArrayList<Lane>(); 
+ ArrayList<RoadObj> objs = new ArrayList<>();
+
  int inflow;
  int x;
  int carIndex;
@@ -9,6 +11,8 @@ class Road {
  Road(int x, int numLanes,int vph, float timelapse){
    carIndex = 0;
    inflow = round(1. / (float(vph) * (1. / 60) * (1. / 60) * (1. / fps) * timelapse));
+   this.x = x;
+
    this.timelapse = timelapse;
    this.speedLimit = mphToPpf(speedLimit);
    Lane lastLane = null;
@@ -35,6 +39,11 @@ class Road {
    for (Lane lane: lanes) {
      lane.behavior();
      lane.display();
+   }
+   
+   for (RoadObj obj:objs) {
+    obj.update();
+    obj.display(); 
    }
  }
   

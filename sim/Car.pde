@@ -6,6 +6,7 @@ class Car {
   PVector prevPosition;
   float lastSwitchTime;
   float switchCooldown;
+  float[] forceQueue = new float[]{};
   Lane lane, transitionLane, laneToSwitch;
   Car(Lane lane, int x, int y, int w_, int h_, float mph, float maxmph, float maxAcceleration_, float angle_) {
     w = feetToPixels(w_);
@@ -70,23 +71,28 @@ class Car {
 
     return rearCar;
   }
-  float calculateSafeDistance(Car frontCar) {
+  
+  float calculateSafeDistance(float fSpeed,float fMaxAccel) {
     float reactionTime = 1.0;
     float followingDistance = speed * reactionTime;
     float bufferDistance = 10.0;
 
     float carLength = h;
 
-    if (speed > 0 && frontCar.speed > 0) {
+    if (speed > 0 && fSpeed > 0) {
       float decelerationDistance = (speed * speed) / (2 * maxAcceleration) -
-        (frontCar.speed * frontCar.speed) / (2 * frontCar.maxAcceleration);
+        (fSpeed * fSpeed) / (2 * fMaxAccel);
       return followingDistance + decelerationDistance + bufferDistance + carLength;
-    } else if (speed > 0 && frontCar.speed == 0) {
+    } else if (speed > 0 && fSpeed == 0) {
       float decelerationDistance = (speed * speed) / (2 * maxAcceleration);
       return followingDistance + decelerationDistance + bufferDistance + carLength;
     } else {
       return bufferDistance + carLength;
     }
+  }
+  
+  float calculateSafeDistance(Car frontCar) {
+    return calculateSafeDistance(frontCar.speed,frontCar.maxAcceleration);
   }
 
   boolean canSwitchLane(Lane laneToSwitch) {
@@ -114,8 +120,44 @@ class Car {
     return true;
   }
 
+  float getAccelPID(float safeDist, float dist) {
+        float P_d = 0.01;
+        float A_d = min(-P_d * (safeDist - dist), maxAcceleration);
+        float speed_limit = lane.parent.speedLimit;
+        float P_v = 0.01;
+        float A_v = -P_v * (speed_limit - speed);
+        float A = min(A_d, A_v, maxAcceleration); 
+        
+        return A;
+  }
   void think() {
-    Car frontCar = getFrontCar(lane);
+    objActions();
+    driveNorm();
+  }
+  
+  boolean objActions(){
+    for (RoadObj obj : lane.parent.objs){
+      switch(obj.getType()){
+        case "StopSign":
+          float dist = position.y - obj.getPos();
+          if(dist > 50) {
+             applyForce(getAccelPID(calculateSafeDistance(0,50),abs(obj.getPos() - position.y)));
+          }
+          break;
+        case "TrafficLight":
+          if(obj.getState() == "red") {
+             applyForce(getAccelPID(calculateSafeDistance(0,50),abs(obj.getPos() - position.y)));
+          }
+          break;
+      }
+    }
+    
+    return false;
+  }
+  
+  
+  void driveNorm() {
+   Car frontCar = getFrontCar(lane);
     if (frontCar == null) {
       applyForce(maxAcceleration);
     } else {
@@ -131,17 +173,13 @@ class Car {
             }
         }
         //CANNOT SWITCH LANES
-        float P_d = 0.01;
-        float A_d = min(-P_d * (safeDistance - distance), maxAcceleration);
-        float speed_limit = lane.parent.speedLimit;
-        float P_v = 0.01;
-        float A_v = -P_v * (speed_limit - speed);
-        float A = min(A_d, A_v, maxAcceleration);
-        applyForce(A);
+
+        applyForce(getAccelPID(safeDistance,distance));
       } else {
         applyForce(maxAcceleration);
       }
-    }
+    } 
+    
   }
   void move() {
     prevPosition = position.copy();
@@ -156,7 +194,7 @@ class Car {
   }
 
   void applyForce(float force) {
-    acceleration = force;
+    if(abs(force) > abs(acceleration)) acceleration = force;
   }
 
   void turn(float deg) {

@@ -22,6 +22,7 @@ class Lane {
 
   void display() {
     fill(255);
+    stroke(0);
     rect(x - 17.5, 0, 50, height);
     for (Car car : carArray) {
       car.display();
