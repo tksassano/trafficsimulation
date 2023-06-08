@@ -48,8 +48,8 @@ class TrafficLight implements RoadObj {
      fill(255,255,150);
      stroke(255,255,150);
    }
-   line(parent.x - 17.5, pos, parent.x - 17.5 + 50 * parent.lanes.size(),pos); 
+   line(parent.roadStart.x - 17.5, pos, parent.roadStart.x - 17.5 + 50 * parent.lanes.size(),pos); 
    textSize(25);
-   text("TR. LIGHT", parent.x + 50 * parent.lanes.size(),pos);
+   text("TR. LIGHT", parent.roadStart.x + 50 * parent.lanes.size(),pos);
   }
 }
