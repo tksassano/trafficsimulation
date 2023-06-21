@@ -15,10 +15,10 @@ class MetricTracker {
     this.position = new PVector(x,y);
     this.lane = lane;
     this.dStart = 450;
-    this.dEnd = 400;
+    this.dEnd = 200;
     this.tTime = 900;
     this.tStart = 600;
-    this.tEnd = 200;
+    this.tEnd = 599;
     tick = 0;
   }
   float Density(int start, int end){
@@ -28,7 +28,7 @@ class MetricTracker {
         numCars ++; 
       }
     }
-    return numCars/(start-end);
+    return numCars*250/(start-end);
   }
   float Throughput(int time, int start, int end){
     int through = Throughput;
@@ -55,8 +55,10 @@ class MetricTracker {
     int numCar = 0;
     int speed = 0;
     for(Car car : lane.carArray){
+      if(car.position.y <= 900){
       speed += car.velocity.mag(); 
       numCar ++;
+      }
     }
     if(numCar != 0){
     return speed/numCar;
@@ -70,6 +72,7 @@ class MetricTracker {
     fill(0);
     text("Density: " + Density(dStart, dEnd),position.x,position.y);
     text("Throughput: " + Throughput(tTime, tStart, tEnd), position.x, position.y + 30);
+   
     text("Average Speed: " + ppfToMph(avgSpeed()), position.x, position.y + 60);
   }
 /*
