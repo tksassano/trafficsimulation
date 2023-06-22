@@ -42,7 +42,7 @@ class Car {
 
   void switchLane(Lane newLane) {
     lane.removeCar(this);
-    position.x = newLane.laneStart.x;
+    position.x = newLane.x;
     newLane.addCar(this);
     lane = newLane;
     maxSpeed = mphToPpf(lane.speedLimit);
@@ -107,12 +107,7 @@ class Car {
 
   void display() {
     fill(c);
-    //pushMatrix();
-    //translate(width/2-position.x, height/2-position.y);
-    //rotate(PI/2);
-    //translate(position.x-width/2, position.y-height/2);
     rect(position.x, position.y, w, h);
-    //popMatrix();
     
   //  line(0,frontCar.position.y+dist,width,frontCar.position.y+dist);
 

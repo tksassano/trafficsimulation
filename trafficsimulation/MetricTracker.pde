@@ -1,9 +1,9 @@
 class MetricTracker {
   int Throughput;
   int AverageSpeed;
-  int Density; 
+  int Density;
   int numCars;
-  PVector position; 
+  PVector position;
   Lane lane;
   int dStart;
   int dEnd;
@@ -11,8 +11,8 @@ class MetricTracker {
   int tStart;
   int tEnd;
   int tick;
-  MetricTracker(Lane lane, int x, int y){
-    this.position = new PVector(x,y);
+  MetricTracker(Lane lane, int x, int y) {
+    this.position = new PVector(x, y);
     this.lane = lane;
     this.dStart = 450;
     this.dEnd = 200;
@@ -21,64 +21,55 @@ class MetricTracker {
     this.tEnd = 599;
     tick = 0;
   }
-  float Density(int start, int end){
+  float Density(int start, int end) {
     numCars = 0;
-    for(Car car : lane.carArray){
-     if(car.position.y <= start && car.position.y >= end){ 
-        numCars ++; 
+    for (Car car : lane.carArray) {
+      if (car.position.y <= start && car.position.y >= end) {
+        numCars ++;
       }
     }
     return numCars*250/(start-end);
   }
-  float Throughput(int time, int start, int end){
+  float Throughput(int time, int start, int end) {
     int through = Throughput;
     tick--;
-  
-    if(tick <= 0){
-      
+
+    if (tick <= 0) {
+
       tick = time;
-     
+
       through = Throughput/time;
       Throughput = 0;
       return through;
-    }
-    else{
-      for(Car car : lane.carArray){
-        if(car.position.y <= start && car.position.y >= end){
-           Throughput ++;
+    } else {
+      for (Car car : lane.carArray) {
+        if (car.position.y <= start && car.position.y >= end) {
+          Throughput ++;
         }
       }
     }
     return through;
   }
-  float avgSpeed(){
+  float avgSpeed() {
     int numCar = 0;
     int speed = 0;
-    for(Car car : lane.carArray){
-      if(car.position.y <= 900){
-      speed += car.velocity.mag(); 
-      numCar ++;
+    for (Car car : lane.carArray) {
+      if (car.position.y <= 900) {
+        speed += car.velocity.mag();
+        numCar ++;
       }
     }
-    if(numCar != 0){
-    return speed/numCar;
-    }
-    else{
-    return speed;
+    if (numCar != 0) {
+      return speed/numCar;
+    } else {
+      return speed;
     }
   }
-  void display(){
+  void display() {
     textSize(20);
     fill(0);
-    text("Density: " + Density(dStart, dEnd),position.x,position.y);
+    text("Density: " + Density(dStart, dEnd), position.x, position.y);
     text("Throughput: " + Throughput(tTime, tStart, tEnd), position.x, position.y + 30);
-   
     text("Average Speed: " + ppfToMph(avgSpeed()), position.x, position.y + 60);
   }
-/*
-let's redo
-Throughput: Variable that increments each time a vehicle passes and resets each time interval finishes, divide it by interval
-Average speed: Average the mph at instant each vehicle that passes it within interval
-Density: Define segment of road of certain length, count number of vehicles on it and divide by length every x frames
-*/
 }

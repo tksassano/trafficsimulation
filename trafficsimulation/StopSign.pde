@@ -26,8 +26,8 @@ class StopSign implements RoadObj {
   void display(){
    fill(255,50,50);
    stroke(255,50,50);
-   line(parent.roadStart.x - 17.5, pos, parent.roadStart.x - 17.5 + 50 * parent.lanes.size(),pos); 
+   line(parent.x - 17.5, pos, parent.x - 17.5 + 50 * parent.lanes.size(),pos); 
    textSize(25);
-   text("STOP", parent.roadStart.x + 50 * parent.lanes.size(),pos);
+   text("STOP", parent.x + 50 * parent.lanes.size(),pos);
   }
 }
